@@ -1,0 +1,101 @@
+{% extends "recruitment/base.html" %}
+
+{% block title %}Batch Details{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="fw-bold">Upload Batch Details</h2>
+        <p class="text-muted mb-0">{{ batch.original_filename }}</p>
+    </div>
+    <a href="{% url 'recruitment:candidate_list' %}" class="btn btn-outline-primary">
+        View All Candidates
+    </a>
+</div>
+
+<div class="card shadow-soft p-4 mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="text-muted">Status</div>
+            <span class="badge text-bg-info">{{ batch.get_status_display }}</span>
+        </div>
+        <div class="col-md-4">
+            <div class="text-muted">Uploaded</div>
+            {{ batch.created_at|date:"d M Y, H:i" }}
+        </div>
+        <div class="col-md-4">
+            <div class="text-muted">Progress</div>
+            {{ batch.progress_percentage }}%
+        </div>
+    </div>
+
+    <div class="progress mt-3" role="progressbar"
+         aria-label="Processing progress"
+         aria-valuenow="{{ batch.progress_percentage }}"
+         aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: {{ batch.progress_percentage }}%">
+            {{ batch.progress_percentage }}%
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3">
+            <div class="text-muted">Total Rows</div>
+            <h3>{{ batch.total_records }}</h3>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3">
+            <div class="text-muted">Processed</div>
+            <h3>{{ batch.processed_records }}</h3>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3">
+            <div class="text-muted">Imported</div>
+            <h3 class="text-success">{{ batch.accepted_records }}</h3>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3">
+            <div class="text-muted">Rejected</div>
+            <h3 class="text-danger">{{ batch.rejected_records }}</h3>
+        </div>
+    </div>
+</div>
+
+{% if batch.error_message %}
+<div class="card shadow-soft p-4 mb-4">
+    <h5 class="text-danger">Processing Errors / Row Warnings</h5>
+    <pre class="text-wrap mb-0">{{ batch.error_message }}</pre>
+</div>
+{% endif %}
+
+<div class="card shadow-soft p-3">
+    <h5>Imported Candidates</h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr>
+            </thead>
+            <tbody>
+            {% for candidate in candidates %}
+                <tr>
+                    <td>{{ candidate.candidate_name }}</td>
+                    <td>{{ candidate.email }}</td>
+                    <td>{{ candidate.applied_role|default:"—" }}</td>
+                    <td>
+                        <a href="{% url 'recruitment:candidate_detail' candidate.pk %}"
+                           class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4" class="text-muted">No candidates imported.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

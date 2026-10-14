@@ -1,0 +1,99 @@
+{% extends "recruitment/base.html" %}
+
+{% block title %}Candidates{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="fw-bold">Candidates</h2>
+        <p class="text-muted mb-0">Search and manage candidate profiles.</p>
+    </div>
+    <div>
+        <a href="{% url 'recruitment:candidate_create' %}" class="btn btn-primary">
+            + Add Candidate
+        </a>
+        <a href="{% url 'recruitment:upload_candidates' %}" class="btn btn-outline-primary">Upload File</a>
+    </div>
+</div>
+
+<div class="card shadow-soft p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-5">
+            <input type="search" name="q" class="form-control" placeholder="Search name, email, phone or college"
+                value="{{ search_query }}">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="role" class="form-control" placeholder="Filter by role"
+                value="{{ selected_role }}">
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">All historical statuses</option>
+                <option value="SELECTED" {% if selected_status == "SELECTED" %}selected{% endif %}>Selected</option>
+                <option value="REJECTED" {% if selected_status == "REJECTED" %}selected{% endif %}>Rejected</option>
+                <option value="WAITLISTED" {% if selected_status == "WAITLISTED" %}selected{% endif %}>Waitlisted</option>
+                <option value="UNKNOWN" {% if selected_status == "UNKNOWN" %}selected{% endif %}>Unknown</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="card shadow-soft p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Applied Role</th>
+                    <th>Experience (months)</th>
+                    <th>History</th>
+                    <th>Valid</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates %}
+                <tr>
+                    <td class="fw-semibold">{{ candidate.candidate_name }}</td>
+                    <td>{{ candidate.email }}</td>
+                    <td>{{ candidate.applied_role|default:"—" }}</td>
+                    <td>{{ candidate.experience_months }}</td>
+                    <td>{{ candidate.get_historical_selection_status_display }}</td>
+                    <td>
+                        {% if candidate.is_valid %}
+                        <span class="badge text-bg-success">Yes</span>
+                        {% else %}
+                        <span class="badge text-bg-danger">No</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap">
+                        <a href="{% url 'recruitment:candidate_detail' candidate.pk %}"
+                            class="btn btn-sm btn-outline-primary">View</a>
+                        <a href="{% url 'recruitment:candidate_update' candidate.pk %}"
+                            class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <form method="post" action="{% url 'recruitment:candidate_delete' candidate.pk %}"
+                            class="d-inline" onsubmit="return confirm('Delete this candidate?');">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-danger" type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        No candidates found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-muted small">Results: {{ candidates|length }}</div>
+</div>
+{% endblock %}

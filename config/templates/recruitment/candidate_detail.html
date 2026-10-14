@@ -1,0 +1,112 @@
+{% extends "recruitment/base.html" %}
+
+{% block title %}Candidate Details{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="fw-bold">{{ candidate.candidate_name }}</h2>
+        <p class="text-muted mb-0">{{ candidate.email }}</p>
+    </div>
+    <a href="{% url 'recruitment:candidate_update' candidate.pk %}"
+       class="btn btn-primary">Edit Candidate</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-soft p-4 h-100">
+            <h5 class="mb-3">Personal and Professional Details</h5>
+            <dl class="row mb-0">
+                <dt class="col-sm-5">Phone</dt>
+                <dd class="col-sm-7">{{ candidate.phone|default:"—" }}</dd>
+
+                <dt class="col-sm-5">College</dt>
+                <dd class="col-sm-7">{{ candidate.college|default:"—" }}</dd>
+
+                <dt class="col-sm-5">Applied Role</dt>
+                <dd class="col-sm-7">{{ candidate.applied_role|default:"—" }}</dd>
+
+                <dt class="col-sm-5">Experience</dt>
+                <dd class="col-sm-7">{{ candidate.experience_months }} months</dd>
+
+                <dt class="col-sm-5">Notice Period</dt>
+                <dd class="col-sm-7">{{ candidate.notice_period_days }} days</dd>
+
+                <dt class="col-sm-5">Expected Salary</dt>
+                <dd class="col-sm-7">{{ candidate.expected_salary|default:"Not provided" }}</dd>
+
+                <dt class="col-sm-5">Historical Status</dt>
+                <dd class="col-sm-7">{{ candidate.get_historical_selection_status_display }}</dd>
+
+                <dt class="col-sm-5">Portfolio</dt>
+                <dd class="col-sm-7">
+                    {% if candidate.portfolio_url %}
+                        <a href="{{ candidate.portfolio_url }}" target="_blank"
+                           rel="noopener noreferrer">Open portfolio</a>
+                    {% else %}—{% endif %}
+                </dd>
+
+                <dt class="col-sm-5">Skills</dt>
+                <dd class="col-sm-7">
+                    {% for skill in candidate.skills %}
+                        <span class="badge text-bg-primary me-1 mb-1">{{ skill }}</span>
+                    {% empty %}—{% endfor %}
+                </dd>
+            </dl>
+
+            {% if candidate.resume_file %}
+                <a href="{{ candidate.resume_file.url }}" class="btn btn-outline-primary mt-3">
+                    View Resume File
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-soft p-4 h-100">
+            <h5>Resume Text</h5>
+            <div class="text-break">{{ candidate.resume_text|default:"No resume text available."|linebreaks }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-soft p-4 mt-4">
+    <h5>Screening Results</h5>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>Role</th><th>Rule Score</th><th>ML Score</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for result in screening_results %}
+                <tr>
+                    <td>{{ result.role.title }}</td>
+                    <td>{{ result.rule_score|floatformat:1 }}</td>
+                    <td>{{ result.ml_score|floatformat:1 }}</td>
+                    <td>{{ result.get_status_display }}</td>
+                    <td>{{ result.screened_at|date:"d M Y H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="text-muted">No screening results yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card shadow-soft p-4 mt-4">
+    <h5>Interview Feedback</h5>
+    {% for item in feedback %}
+        <div class="border-bottom py-3">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <strong>{{ item.get_recommendation_display }}</strong>
+                <span class="text-muted small">{{ item.created_at|date:"d M Y H:i" }}</span>
+            </div>
+            <div>Rating: {{ item.rating }}/5</div>
+            <p class="mb-0">{{ item.comments|default:"No comments." }}</p>
+        </div>
+    {% empty %}
+        <p class="text-muted mb-0">No interview feedback recorded.</p>
+    {% endfor %}
+    <a href="{% url 'recruitment:interview_feedback_create' %}"
+       class="btn btn-outline-primary mt-3 align-self-start">Add Feedback</a>
+</div>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "recruitment/base.html" %}
+
+{% block title %}Dashboard | TalentScreen{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold">Recruitment Dashboard</h2>
+        <p class="text-muted mb-0">Overview of candidates, screening and interviews.</p>
+    </div>
+    <a href="{% url 'recruitment:upload_candidates' %}" class="btn btn-primary">
+        + Upload Candidates
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    {% for label, value in dashboard_cards %}
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">{{ label }}</div>
+            <div class="display-6 fw-bold">{{ value }}</div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Total Candidates</div>
+            <div class="display-6 fw-bold">{{ total_candidates }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Valid Candidates</div>
+            <div class="display-6 fw-bold text-success">{{ valid_candidates }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Active Job Roles</div>
+            <div class="display-6 fw-bold">{{ active_roles }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Screening Results</div>
+            <div class="display-6 fw-bold">{{ total_screenings }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Shortlisted</div>
+            <div class="display-6 fw-bold text-primary">{{ shortlisted_candidates }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Upload Batches</div>
+            <div class="display-6 fw-bold">{{ total_batches }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-soft p-3 h-100">
+            <div class="text-muted">Available Interview Slots</div>
+            <div class="display-6 fw-bold">{{ upcoming_interviews }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-soft p-3">
+            <h5>Recent Candidates</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidate in recent_candidates %}
+                        <tr>
+                            <td>{{ candidate.candidate_name }}</td>
+                            <td>{{ candidate.applied_role|default:"—" }}</td>
+                            <td>
+                                <a href="{% url 'recruitment:candidate_detail' candidate.pk %}"
+                                    class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-muted">No candidates yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-soft p-3">
+            <h5>Recent Upload Batches</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>File</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in recent_batches %}
+                        <tr>
+                            <td>{{ batch.original_filename }}</td>
+                            <td>{{ batch.get_status_display }}</td>
+                            <td>
+                                <a href="{% url 'recruitment:batch_detail' batch.pk %}"
+                                    class="btn btn-sm btn-outline-primary">Details</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-muted">No uploads yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "recruitment/base.html" %}
+
+{% block title %}Upload Candidates{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-soft p-4">
+            <h2 class="fw-bold mb-2">Upload Candidate Data</h2>
+            <p class="text-muted">
+                Upload a CSV or Excel file containing candidate information.
+            </p>
+
+            <div class="alert alert-info">
+                Recommended columns: <code>candidate_name</code>, <code>email</code>,
+                <code>phone</code>, <code>college</code>, <code>applied_role</code>,
+                <code>skills</code>, <code>experience_months</code>,
+                <code>notice_period_days</code>, <code>expected_salary</code>,
+                <code>resume_text</code>, <code>portfolio_url</code>,
+                <code>selection_status</code>.
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.file.id_for_label }}">
+                        Select CSV/Excel File
+                    </label>
+                    {{ form.file }}
+                    {% for error in form.file.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Upload and Process</button>
+                <a href="{% url 'recruitment:dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

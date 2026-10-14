@@ -1,0 +1,97 @@
+{% extends "recruitment/base.html" %}
+
+{% block title %}Screening Results{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold">Screening Results</h2>
+    <p class="text-muted">Review candidate scores and screening decisions.</p>
+</div>
+
+<div class="card shadow-soft p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-5">
+            <input type="search" name="q" class="form-control" placeholder="Search candidate or job role"
+                value="{{ search_query|default:'' }}">
+        </div>
+
+
+
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">All statuses</option>
+                {% for value, label in status_choices %}
+                {% if selected_status == value %}
+                <option value = "{{ value }}" selected>{{ label }}</option>
+                {% else %}
+                <option value = "{{ value }}">{{ label }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+
+
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">All statuses</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+</div>
+
+<div class="card shadow-soft p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Candidate</th>
+                    <th>Job Role</th>
+                    <th>Rule Score</th>
+                    <th>ML Score</th>
+                    <th>Resume Score</th>
+                    <th>Combined Score</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>
+                        <a href="{% url 'recruitment:candidate_detail' result.candidate.pk %}">
+                            {{ result.candidate.candidate_name }}
+                        </a>
+                    </td>
+                    <td>{{ result.role.title }}</td>
+                    <td>{{ result.rule_score|floatformat:1 }}%</td>
+                    <td>{{ result.ml_score|floatformat:1 }}%</td>
+                    <td>{{ result.resume_score|floatformat:1 }}%</td>
+                    <td>
+                        <strong>{{ result.combined_score|floatformat:1 }}%</strong>
+                    </td>
+                    <td>{{ result.get_status_display }}</td>
+                    <td>{{ result.screened_at|date:"d M Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted py-4">
+                        No screening results found. Screening results must be generated before they appear here.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

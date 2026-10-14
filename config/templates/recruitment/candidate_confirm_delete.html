@@ -1,0 +1,28 @@
+{% extends "recruitment/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3>Delete Candidate</h3>
+
+            <p>
+                Are you sure you want to delete
+                <strong>{{ object.candidate_name }}</strong>?
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-danger">
+                    Confirm Delete
+                </button>
+
+                <a href="{% url 'recruitment:candidate_list' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

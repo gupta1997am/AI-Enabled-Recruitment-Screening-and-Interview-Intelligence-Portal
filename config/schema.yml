@@ -1,0 +1,761 @@
+openapi: 3.0.3
+info:
+  title: Recruitment Portal API
+  version: 1.0.0
+  description: API for candidate management, job roles, screening results, and JWT
+    authentication.
+paths:
+  /api/candidates/:
+    get:
+      operationId: candidates_list
+      description: |-
+        GET: List candidates.
+        POST: Create a candidate.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - candidates
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Candidate'
+          description: ''
+    post:
+      operationId: candidates_create
+      description: |-
+        GET: List candidates.
+        POST: Create a candidate.
+      tags:
+      - candidates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+          description: ''
+  /api/candidates/{id}/:
+    get:
+      operationId: candidates_retrieve
+      description: |-
+        GET: Retrieve a candidate.
+        PUT/PATCH: Update a candidate.
+        DELETE: Delete a candidate.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - candidates
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+          description: ''
+    put:
+      operationId: candidates_update
+      description: |-
+        GET: Retrieve a candidate.
+        PUT/PATCH: Update a candidate.
+        DELETE: Delete a candidate.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - candidates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+          description: ''
+    patch:
+      operationId: candidates_partial_update
+      description: |-
+        GET: Retrieve a candidate.
+        PUT/PATCH: Update a candidate.
+        DELETE: Delete a candidate.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - candidates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCandidate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCandidate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCandidate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+          description: ''
+    delete:
+      operationId: candidates_destroy
+      description: |-
+        GET: Retrieve a candidate.
+        PUT/PATCH: Update a candidate.
+        DELETE: Delete a candidate.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - candidates
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/roles/:
+    get:
+      operationId: roles_list
+      description: |-
+        GET: List job roles.
+        POST: Create a job role.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - roles
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobRole'
+          description: ''
+    post:
+      operationId: roles_create
+      description: |-
+        GET: List job roles.
+        POST: Create a job role.
+      tags:
+      - roles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JobRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JobRole'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobRole'
+          description: ''
+  /api/roles/{id}/:
+    get:
+      operationId: roles_retrieve
+      description: |-
+        GET: Retrieve a job role.
+        PUT/PATCH: Update a job role.
+        DELETE: Delete a job role.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - roles
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobRole'
+          description: ''
+    put:
+      operationId: roles_update
+      description: |-
+        GET: Retrieve a job role.
+        PUT/PATCH: Update a job role.
+        DELETE: Delete a job role.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - roles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JobRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JobRole'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobRole'
+          description: ''
+    patch:
+      operationId: roles_partial_update
+      description: |-
+        GET: Retrieve a job role.
+        PUT/PATCH: Update a job role.
+        DELETE: Delete a job role.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - roles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedJobRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedJobRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedJobRole'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobRole'
+          description: ''
+    delete:
+      operationId: roles_destroy
+      description: |-
+        GET: Retrieve a job role.
+        PUT/PATCH: Update a job role.
+        DELETE: Delete a job role.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - roles
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/screening/:
+    get:
+      operationId: screening_list
+      description: 'GET: List screening results.'
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - screening
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScreeningResult'
+          description: ''
+  /api/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+components:
+  schemas:
+    Candidate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        candidate_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 25
+        college:
+          type: string
+          maxLength: 200
+        applied_role:
+          type: string
+          maxLength: 150
+        skills: {}
+        experience_months:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        notice_period_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        expected_salary:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        resume_text:
+          type: string
+        portfolio_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        historical_selection_status:
+          $ref: '#/components/schemas/HistoricalSelectionStatusEnum'
+        resume_file:
+          type: string
+          format: uri
+          nullable: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        batch:
+          type: integer
+          readOnly: true
+          nullable: true
+        is_valid:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - applied_role
+      - batch
+      - candidate_name
+      - college
+      - created_at
+      - email
+      - id
+      - is_valid
+      - phone
+      - updated_at
+    HistoricalSelectionStatusEnum:
+      enum:
+      - SELECTED
+      - REJECTED
+      - WAITLISTED
+      - UNKNOWN
+      type: string
+      description: |-
+        * `SELECTED` - Selected
+        * `REJECTED` - Rejected
+        * `WAITLISTED` - Waitlisted
+        * `UNKNOWN` - Unknown
+    JobRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+        required_skills: {}
+        minimum_experience:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - title
+    PatchedCandidate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        candidate_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 25
+        college:
+          type: string
+          maxLength: 200
+        applied_role:
+          type: string
+          maxLength: 150
+        skills: {}
+        experience_months:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        notice_period_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        expected_salary:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        resume_text:
+          type: string
+        portfolio_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        historical_selection_status:
+          $ref: '#/components/schemas/HistoricalSelectionStatusEnum'
+        resume_file:
+          type: string
+          format: uri
+          nullable: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        batch:
+          type: integer
+          readOnly: true
+          nullable: true
+        is_valid:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedJobRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+        required_skills: {}
+        minimum_experience:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    ScreeningResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        candidate:
+          type: integer
+        candidate_name:
+          type: string
+          readOnly: true
+        candidate_email:
+          type: string
+          format: email
+          readOnly: true
+        role:
+          type: integer
+        role_title:
+          type: string
+          readOnly: true
+        batch:
+          type: integer
+          nullable: true
+        rule_score:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        ml_score:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        resume_score:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        combined_score:
+          type: number
+          format: double
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        reasons: {}
+        screened_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - candidate
+      - candidate_email
+      - candidate_name
+      - combined_score
+      - id
+      - role
+      - role_title
+      - screened_at
+    StatusEnum:
+      enum:
+      - PENDING
+      - SHORTLISTED
+      - SELECTED
+      - WAITLISTED
+      - REJECTED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `SHORTLISTED` - Shortlisted
+        * `SELECTED` - Selected
+        * `WAITLISTED` - Waitlisted
+        * `REJECTED` - Rejected
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
